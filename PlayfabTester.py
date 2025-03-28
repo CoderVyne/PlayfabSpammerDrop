@@ -71,6 +71,18 @@ def send_request(title_id, proxy=None):
     except Exception as e:
         return str(e)
 
+def send_webhook(webhook_url, progress):
+    try:
+        requests.post(webhook_url, json={
+            "embeds": [{
+                "title": "PlayFab Tester Progress",
+                "description": f"Progress: {progress:.2f}%",
+                "color": 0x800080
+            }]
+        })
+    except:
+        pass
+
 def main():
     clear_screen()
     print(BANNER)
@@ -102,16 +114,7 @@ def main():
             print(f"{Fore.MAGENTA}Progress: {progress:.2f}%{Style.RESET_ALL}")
             
             if webhook_url:
-                try:
-                    requests.post(webhook_url, json={
-                        "embeds": [{
-                            "title": "PlayFab Tester Progress",
-                            "description": f"Progress: {progress:.2f}%",
-                            "color": 0x800080
-                        }]
-                    })
-                except:
-                    pass
+                send_webhook(webhook_url, progress)
     
     print(f"\n{Fore.MAGENTA}Summary:{Style.RESET_ALL}")
     print(f"{Fore.GREEN}Successful: {successful}{Style.RESET_ALL}")
